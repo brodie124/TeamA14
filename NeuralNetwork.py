@@ -26,10 +26,10 @@ def get_sigmoid_derivative(x):
 class NeuralNetwork:
     weights = []
 
-    def __init__(self):
+    def __init__(self, inputs_no):
         print(self.weights)
         random.seed(1)
-        self.weights = 2 * numpy.random.sample((3, 1)) - 1
+        self.weights = 2 * numpy.random.sample((inputs_no, 1)) - 1
 
 
     def think(self, inputs):
