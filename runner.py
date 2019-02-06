@@ -5,6 +5,8 @@ Created on Wed Feb  6 15:32:15 2019
 @author: bp18125
 """
 
+import numpy
+
 from FeatureSelector import FeatureSelector
 from NeuralNetwork import NeuralNetwork
 
@@ -23,21 +25,40 @@ selector.categorise_attribute([
 ])
     
 selector.ignore_attribute([
-    'Id', 'PoolQC', 'MiscFeature', 'Fence', 'GarageYrBlt', 'SalePrice'
+    'Id', 'PoolQC', 'MiscFeature', 'Fence', 'GarageYrBlt'
 ])
 
 
 print("Using the following features: ")
-features = selector.rank_features(40)
-for f in features:
-    print(selector.data.columns[f])
+features = selector.rank_features(40 + 1)
+#for f in features:
+ #   print(selector.data.columns[f])
     
 
 network = NeuralNetwork(len(features))
 
+inputs  = []
+outputs = []
 
-print("Row Loop.")
+sale_index = selector.data.columns.get_loc('SalePrice')
+
+
 for index, row in selector.data.iterrows():
 
-    print(row)
-    break
+    row_input = []
+    
+    for f in features:
+        print(f)
+        row_input.append(row[attr])
+        
+    inputs.append(row_input)
+        
+    outputs.append(row['SalePrice'])
+    
+    
+outputs = numpy.array([outputs]).T
+inputs = numpy.array(inputs)
+
+network.train(inputs, outputs, 10000)
+
+print(network.weights)

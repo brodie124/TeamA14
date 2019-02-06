@@ -7,6 +7,8 @@ Created on Wed Feb  6 13:37:18 2019
 import pandas
 import numpy
 
+from sklearn.ensemble import ExtraTreesClassifier
+
 class FeatureSelector:
     def __init__(self, filename):
         self.ignored_attributes = []
@@ -52,25 +54,3 @@ class FeatureSelector:
         features_ranked.sort(key=lambda x: x[1], reverse=True)
         
         return [x[0] for x in features_ranked][0:top]
-
-        
-selector = FeatureSelector('kaggle_data/train.csv')
-
-selector.categorise_attribute([
-    'MSZoning', 'Street', 'Alley', 'LotShape', 'LandContour', 'Utilities',
-    'LotConfig', 'LandSlope', 'Neighborhood', 'Condition1', 'Condition2',
-    'BldgType', 'HouseStyle', 'RoofStyle', 'RoofMatl', 'Exterior1st',
-    'Exterior2nd', 'MasVnrType', 'ExterQual', 'ExterCond', 'Foundation',
-    'BsmtQual', 'BsmtCond', 'BsmtExposure', 'BsmtFinType1', 'BsmtFinType2',
-    'BsmtFinType2', 'Heating', 'HeatingQC', 'CentralAir', 'Electrical', 'KitchenQual',
-    'Functional', 'FireplaceQu', 'GarageType', 'GarageFinish', 'GarageQual', 'GarageCond',
-    'PavedDrive', 'PoolQC', 'Fence', 'MiscFeature', 'SaleType', 'SaleCondition'
-])
-    
-selector.ignore_attribute([
-    'Id', 'PoolQC', 'MiscFeature', 'Fence', 'GarageYrBlt', 'SalePrice'
-])
-    
-features = selector.rank_features(40)
-for f in features:
-    print(selector.data.columns[f])
