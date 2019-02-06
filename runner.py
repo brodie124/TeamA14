@@ -5,8 +5,8 @@ Created on Wed Feb  6 15:32:15 2019
 @author: bp18125
 """
 
-import FeatureSelector
-import NeuralNetwork
+from FeatureSelector import FeatureSelector
+from NeuralNetwork import NeuralNetwork
 
         
 selector = FeatureSelector('kaggle_data/train.csv')
@@ -36,6 +36,8 @@ for f in features:
 network = NeuralNetwork(len(features))
 
 
+print("Row Loop.")
 for index, row in selector.data.iterrows():
+
     print(row)
     break
