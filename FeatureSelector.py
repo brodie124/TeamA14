@@ -4,48 +4,29 @@ Created on Wed Feb  6 13:37:18 2019
 @author: bp18125
 """
 
-import pandas
-import numpy
-
 from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 
 class FeatureSelector:
-    def __init__(self, filename):
-        self.ignored_attributes = []
-        self.categorised_attributes = []
-        self.data = pandas.read_csv(filename)
-    
-    def get_attributes(self):
-        return list(self.data.columns)
-    
-    
-    def ignore_attribute(self, attribute):
-        if(type(attribute) is list):
-            self.ignored_attributes += attribute
-        else:
-            self.ignored_attributes.append(attribute)
-            
-    def categorise_attribute(self, attribute):
-        if(type(attribute) is list):
-            self.categorised_attributes += attribute
-        else:
-            self.categorised_attributes.append(attribute)
-    
-    def rank_features(self, top):  
-        for categorised in self.categorised_attributes:
-            self.data[categorised] = self.data[categorised].astype('category').cat.codes
+
+    def __init__(self, data_frame, target):
+        self.data = data_frame
+        self.target = target
         
-        self.data = self.data.dropna()
-        self.data = self.data.drop(columns=self.ignored_attributes)
-    
+    def rank_features(self, top):
+        target_index = self.data.columns.get_loc(self.target)
+
         data_values = self.data.values
         
-        axisX = data_values[:,0:len(self.get_attributes())]
-        axisY = data_values[:,len(self.get_attributes())-1]
-        
+        axis_x = data_values[:, 0:len(self.data.columns)-1]
+        axis_y = data_values[:, target_index]
+
+        lab_enc = LabelEncoder()
+        axis_y_encoded = lab_enc.fit_transform(axis_y)
+
         model = ExtraTreesClassifier()
-        model.fit(axisX, axisY)
-        
+        model.fit(axis_x, axis_y_encoded)
+
         important_features = model.feature_importances_
         features_ranked = []
         for i in range(0, len(important_features)):

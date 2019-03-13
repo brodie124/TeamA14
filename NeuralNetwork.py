@@ -1,4 +1,5 @@
-import random, numpy
+import random
+import numpy
 
 """
 --- CREDIT ---
@@ -31,16 +32,13 @@ class NeuralNetwork:
         random.seed(1)
         self.weights = 2 * numpy.random.sample((inputs_no, 1)) - 1
 
-
     def think(self, inputs):
-        
         """
         Processes inputs
         :param inputs:
         :return: float
         """
         return get_sigmoid(numpy.dot(inputs, self.weights))
-
 
     def train(self, inputs, outputs, iterations):
         for iteration in range(iterations):
